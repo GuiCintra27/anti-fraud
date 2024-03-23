@@ -2,7 +2,7 @@ from extract_csv_data import extractCsvData
 from sheets_api import pushToSheets
 from risk_analysis import riskAnalysis
 
-rows, Indexes = extractCsvData("data.csv")
+rows, Indexes, cards, users = extractCsvData("data.csv")
 
 if len(rows) == 0:
     print("Não foram encontrados dados na base de dados.")
@@ -12,7 +12,7 @@ else:
 
     try:
         print("Iniciando análise de risco")
-        riskAnalysis(rows, Indexes)
+        riskAnalysis(rows, Indexes, cards, users)
 
         print("Iniciando login no google sheets")
         pushToSheets(rows, Indexes.transaction_amount)

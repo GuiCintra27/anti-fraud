@@ -2,7 +2,7 @@ from datetime import datetime
 from models import Indexes, Card, User
 
 
-def extractCsvData(file: str) -> tuple[list, Indexes]:
+def extractCsvData(file: str) -> tuple[list, Indexes, list[Card], list[User]]:
     # Dados das linhas da tabela
     rows = []
     # Abaixo estou criando como dicionário para facilitar a busca e diminuir a complexidade de tempo
@@ -87,4 +87,4 @@ def extractCsvData(file: str) -> tuple[list, Indexes]:
     averageTicket = "%.2f" % round((totalAmount / len(rows)), 2)
     rows[0] = rows[0] + [averageTicket]
 
-    return rows, Indexes
+    return rows, Indexes, cards, users
