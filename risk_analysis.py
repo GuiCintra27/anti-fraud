@@ -13,3 +13,9 @@ class Titles:
 
 def riskAnalysis(data: list, Titles: Titles):
     print("Risk Analysis")
+
+    for user in users:
+        currUser = users[user]
+        if len(currUser.cards_number) > 2 or len(currUser.devices_id) > 2 or currUser.cbk > 2:
+            print(user, currUser.cards_number, currUser.devices_id,
+                  currUser.cbk, currUser.orders)
