@@ -19,11 +19,36 @@ class Card:
 
 
 class User:
-    def __init__(self, cards_number: list[str], devices_id: list[str], cbk: int, orders: int):
+    def __init__(self, cards_number: list[str], amount: float, devices_id: list[str], cbk: int, orders: int):
         self.cards_number: list[str] = cards_number
+        self.amount: float = amount
         self.devices_id: list[str] = devices_id
         self.cbk: int = cbk
         self.orders: int = orders
+
+    def insert(self, card_number: str, amount: float, device_id: str, cbk: bool):
+        self.cards_number = [card_number]
+        self.amount = float(amount)
+        self.devices_id = [device_id]
+
+        if cbk:
+            self.cbk = 1
+
+    def update(self, card_number: str, amount: float, device_id: str, cbk: bool):
+        self.amount = self.amount + float(amount)
+        self.orders = self.orders + 1
+
+        if card_number not in self.cards_number:
+            self.cards_number.append(card_number)
+
+        if device_id not in self.devices_id:
+            self.devices_id.append(device_id)
+
+        if cbk:
+            if not self.cbk:
+                self.cbk = 1
+            else:
+                self.cbk = self.cbk + 1
 
 
 def extractCsvData(file: str) -> tuple[list, Indexes]:
@@ -34,6 +59,8 @@ def extractCsvData(file: str) -> tuple[list, Indexes]:
     cards = {}
     # Lista de usuários e os dados aos quais estão vinculados
     users = {}
+    # Total de vendas
+    totalAmount = 0
 
     with open(file) as f:
         for line in f:
@@ -67,12 +94,17 @@ def extractCsvData(file: str) -> tuple[list, Indexes]:
                         counter += 1
 
                 else:
+                    # Não trabalhar com valores da tabela antes desta linha, pois as posições só se acertam após adicionar o horário nas colunas
                     # Converter data para hora e acrescentar na lista
                     hour = f"{datetime.fromisoformat(columns[Indexes.transaction_date]).hour}H"
                     columns.insert(Indexes.hour, hour)
                     rows.append(columns)
 
+                    # Soma a venda ao valor total de vendas
+                    totalAmount += float(columns[Indexes.transaction_amount])
+
                     user_id = columns[Indexes.user_id]
+                    amount = columns[Indexes.transaction_amount]
                     device_id = columns[Indexes.device_id]
                     card_number = columns[Indexes.card_number]
                     cbk = columns[Indexes.has_cbk]
@@ -95,30 +127,20 @@ def extractCsvData(file: str) -> tuple[list, Indexes]:
 
                     # Verifica à quantos cartões e dispositivos um usuário está vinculado
                     # E saber o total de chargeback em relação aos pedidos feitos
-                    user: User = User([], [], 0, 0)
+                    user: User = User([], 0, [], 0, 1)
 
                     if user_id in users:
                         currUser = users[user_id]
-                        currUser.orders = currUser.orders + 1
-
-                        if card_number not in currUser.cards_number:
-                            currUser.cards_number.append(card_number)
-
-                        if device_id not in currUser.devices_id:
-                            currUser.devices_id.append(device_id)
-
-                        if cbk:
-                            if not currUser.cbk:
-                                currUser.cbk = 1
-                            else:
-                                currUser.cbk = currUser.cbk + 1
+                        currUser.update(card_number, amount, device_id, cbk)
 
                     else:
-                        user.cards_number = [card_number]
-                        user.devices_id = [device_id]
-                        user.orders = 1
-                        if cbk:
-                            user.cbk = 1
-                        currUser = user
+                        user.insert(card_number, amount, device_id, cbk)
+                        users[user_id] = user
+
+    # Ticket médio
+    averageTicket = "%.2f" % round((totalAmount / len(rows)), 2)
 
     return rows, Indexes
+
+
+extractCsvData("data.csv")
