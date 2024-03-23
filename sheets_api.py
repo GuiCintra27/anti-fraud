@@ -17,10 +17,7 @@ collumns = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l",
 
 def pushToSheets(data: list, currencyPosition: int) -> None:
     SAMPLE_SPREADSHEET_ID = "16Jc8QNSbyZGZLPcl4qIiG32g1b6XNB1tnHzivA0zNcw"
-    SAMPLE_RANGE_NAME = f"Data!A2:{collumns[len(data[0])-1]}"
-    """Shows basic usage of the Sheets API.
-    Prints values from a sample spreadsheet.
-    """
+    SAMPLE_RANGE_NAME = f"Data!A2:{collumns[len(data[0])]}"
     creds = None
     # The file token.json stores the user's access and refresh tokens, and is
     # created automatically when the authorization flow completes for the first
@@ -38,39 +35,16 @@ def pushToSheets(data: list, currencyPosition: int) -> None:
         # Call the Sheets API
         sheet = service.spreadsheets()
 
-        dataList = []
+        for row in data:
+            # Spreadsheet only understands it as a number if it has a comma instead of a dot, here I make this change
+            row[currencyPosition] = row[currencyPosition].replace('.', ',')
 
-        sheetData = (
-            sheet.values()
-            .get(spreadsheetId=SAMPLE_SPREADSHEET_ID, range=SAMPLE_RANGE_NAME)
-            .execute()
-        )
-
-        averageTicket = 0
-
-        if "values" in sheetData:
-            for i in range(len(sheetData["values"])):
-                dataList.append(sheetData["values"][i])
-
-        for i in range(len(data)):
-            column = data[i]
-
-            averageTicket += float(column[currencyPosition])
-            column[currencyPosition] = column[currencyPosition].replace(
-                '.', ',')
-            dataList.append(column)
-
+        # Update the spreadsheet with the new values
         result = (
             sheet.values()
-            .update(spreadsheetId=SAMPLE_SPREADSHEET_ID, range=SAMPLE_RANGE_NAME, valueInputOption="USER_ENTERED", body={"values": dataList})
+            .update(spreadsheetId=SAMPLE_SPREADSHEET_ID, range=SAMPLE_RANGE_NAME, valueInputOption="USER_ENTERED", body={"values": data})
             .execute()
         )
-
-        # changing the number of decimal places
-        averageTicket = "%.2f" % round((averageTicket / len(dataList)), 2)
-
-        sheet.values().update(spreadsheetId=SAMPLE_SPREADSHEET_ID, range=f"Data!{collumns[len(data[0])]}2",
-                              valueInputOption="USER_ENTERED", body={"values": [[averageTicket]]}).execute()
 
         print(f"{result.get('updatedCells')} células atualizadas.")
     except HttpError as err:

@@ -1,60 +1,11 @@
 from datetime import datetime
-
-
-class Indexes:
-    transaction_id: str = None
-    merchant_id: str = None
-    user_id: str = None
-    card_number: str = None
-    transaction_date: str = None
-    hour: str = None
-    transaction_amount: str = None
-    device_id: str = None
-
-
-class Card:
-    def __init__(self, users_id: list[str], devices_id: list[str]):
-        self.users_id: list[str] = users_id
-        self.devices_id: list[str] = devices_id
-
-
-class User:
-    def __init__(self, cards_number: list[str], amount: float, devices_id: list[str], cbk: int, orders: int):
-        self.cards_number: list[str] = cards_number
-        self.amount: float = amount
-        self.devices_id: list[str] = devices_id
-        self.cbk: int = cbk
-        self.orders: int = orders
-
-    def insert(self, card_number: str, amount: float, device_id: str, cbk: bool):
-        self.cards_number = [card_number]
-        self.amount = float(amount)
-        self.devices_id = [device_id]
-
-        if cbk:
-            self.cbk = 1
-
-    def update(self, card_number: str, amount: float, device_id: str, cbk: bool):
-        self.amount = self.amount + float(amount)
-        self.orders = self.orders + 1
-
-        if card_number not in self.cards_number:
-            self.cards_number.append(card_number)
-
-        if device_id not in self.devices_id:
-            self.devices_id.append(device_id)
-
-        if cbk:
-            if not self.cbk:
-                self.cbk = 1
-            else:
-                self.cbk = self.cbk + 1
+from models import Indexes, Card, User
 
 
 def extractCsvData(file: str) -> tuple[list, Indexes]:
     # Dados das linhas da tabela
     rows = []
-    # Abaixo estou criando como dicionário para facilitar a busca e não ter que relizar mais um loop
+    # Abaixo estou criando como dicionário para facilitar a busca e diminuir a complexidade de tempo
     # Lista de cartões e os dados aos quais estão vinculados
     cards = {}
     # Lista de usuários e os dados aos quais estão vinculados
@@ -68,6 +19,7 @@ def extractCsvData(file: str) -> tuple[list, Indexes]:
             if line:
                 columns = line.split(',')  # Divide a linha em colunas
 
+                # Adiciona as posições das colunas à variável Indexes
                 if Indexes.user_id is None:
                     counter = 0
                     for column in columns:
@@ -109,24 +61,18 @@ def extractCsvData(file: str) -> tuple[list, Indexes]:
                     card_number = columns[Indexes.card_number]
                     cbk = columns[Indexes.has_cbk]
 
+                    # Verifica os dados dos cartões, quantos usuários e dispositivos relacionados
                     card = Card([], [])
 
-                    # Verificar se o cartão ja existe e adicionar os dados, quantos usuários vinculados e quantos dispositivos
                     if card_number in cards:
-                        currCard = currCard
-                        if user_id not in currCard.users_id:
-                            currCard.users_id.append(user_id)
-
-                        if device_id not in currCard.devices_id:
-                            currCard.devices_id.append(device_id)
+                        currCard = cards[card_number]
+                        currCard.update(user_id, device_id)
 
                     else:
-                        card.users_id = [user_id]
-                        card.devices_id = [device_id]
-                        currCard = card
+                        card.insert(user_id, device_id)
+                        cards[card_number] = card
 
-                    # Verifica à quantos cartões e dispositivos um usuário está vinculado
-                    # E saber o total de chargeback em relação aos pedidos feitos
+                    # Verifica os dados de compra de cada cliente, quantos cartões, dispositivos, pedidos, chargebacks e total gasto no dia
                     user: User = User([], 0, [], 0, 1)
 
                     if user_id in users:
@@ -139,8 +85,6 @@ def extractCsvData(file: str) -> tuple[list, Indexes]:
 
     # Ticket médio
     averageTicket = "%.2f" % round((totalAmount / len(rows)), 2)
+    rows[0] = rows[0] + [averageTicket]
 
     return rows, Indexes
-
-
-extractCsvData("data.csv")
