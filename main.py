@@ -11,8 +11,8 @@ else:
     print(f"Total de transações encontradas: {len(rows)}")
 
     try:
-        print("Iniciando analise de risco")
-        riskAnalysis()
+        print("Iniciando análise de risco")
+        riskAnalysis(rows, Indexes)
 
         print("Iniciando login no google sheets")
         pushToSheets(rows, Indexes.transaction_amount)

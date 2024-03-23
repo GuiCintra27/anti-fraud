@@ -2,27 +2,35 @@ from datetime import datetime
 
 
 class Indexes:
-    transaction_id = None
-    merchant_id = None
-    user_id = None
-    card_number = None
-    transaction_date = None
-    Hour = None
-    transaction_amount = None
-    device_id = None
-    has_cbk = None
+    transaction_id: str = None
+    merchant_id: str = None
+    user_id: str = None
+    card_number: str = None
+    transaction_date: str = None
+    Hour: str = None
+    transaction_amount: str = None
+    device_id: str = None
+
+
+class Card:
+    def __init__(self, users_id: list[str], devices_id: list[str]):
+        self.users_id: list[str] = users_id
+        self.devices_id: list[str] = devices_id
 
 
 def extractCsvData(file: str) -> tuple[list, Indexes]:
+    # Dados das linhas da tabela
     rows = []
+    # Lista de cartões e os dados aos quais estão vinculados (estou criando como dicionário para facilitar a busca e não ter que relizar mais um loop)
+    cards = {}
 
     with open(file) as f:
         for line in f:
-            line = line.strip()
+            line = line.strip()  # Remove espaços em branco
             if line:
-                columns = line.split(',')
+                columns = line.split(',')  # Divide a linha em colunas
 
-                if Indexes.user_id == None:
+                if Indexes.user_id is None:
                     counter = 0
                     for column in columns:
                         match column:
@@ -48,8 +56,30 @@ def extractCsvData(file: str) -> tuple[list, Indexes]:
                         counter += 1
 
                 else:
+                    # Converter data para hora e acrescentar na lista
                     hour = f"{datetime.fromisoformat(columns[Indexes.transaction_date]).hour}H"
                     columns.insert(Indexes.Hour, hour)
                     rows.append(columns)
+
+                    # Adicionar os dados do cartão na lista
+                    userId = columns[Indexes.user_id]
+                    deviceId = columns[Indexes.device_id]
+                    cardNumber = columns[Indexes.card_number]
+
+                    card = Card([], [])
+
+                    # Verificar se o cartão ja existe e adicionar os dados, quantos usuários vinculados e quantos dispositivos
+                    if cardNumber in cards:
+                        currCard = cards[cardNumber]
+                        if userId not in currCard.users_id:
+                            cards[cardNumber].users_id.append(userId)
+
+                        if deviceId not in currCard.devices_id:
+                            cards[cardNumber].devices_id.append(deviceId)
+
+                    else:
+                        card.users_id = [userId]
+                        card.devices_id = [deviceId]
+                        cards[cardNumber] = card
 
     return rows, Indexes
