@@ -56,10 +56,10 @@ def userAnalysis(users: list[User], scores: dict[str, int], averageTicket: float
                 suspect.updateScore(scores['high'])
 
         match user.amount:
-            case n if n >= averageTicket * 2 and n < averageTicket * 3:
+            case n if n >= averageTicket * 2 and n < averageTicket * 2.5:
                 suspect.updateScore(scores['medium'])
 
-            case n if n >= averageTicket * 3 and n < averageTicket * 3.5:
+            case n if n >= averageTicket * 2.5 and n < averageTicket * 3.5:
                 suspect.updateScore(scores['high'])
 
             case n if n >= averageTicket * 3.5:
@@ -84,6 +84,7 @@ def userAnalysis(users: list[User], scores: dict[str, int], averageTicket: float
         if suspect.score > 0:
             if int(user.hour) < 6:
                 suspect.updateScore(scores['low'])
+                reasons.append('Hour')
 
         if suspect.score > 30:
             suspects.append(suspect)

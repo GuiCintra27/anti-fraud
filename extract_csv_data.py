@@ -84,7 +84,7 @@ def extractCsvData(file: str) -> tuple[list, Indexes, list[Card], list[User]]:
                         users[user_id] = user
 
     # Ticket médio
-    averageTicket = "%.2f" % round((totalAmount / len(rows)), 2)
+    averageTicket = "%.2f" % round((totalAmount / len(users)), 2)
     rows[0] = rows[0] + [averageTicket]
 
     return rows, Indexes, cards, users

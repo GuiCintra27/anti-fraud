@@ -12,6 +12,7 @@ else:
 
     print("Iniciando análise de risco")
     suspectUsers, suspectCards = riskAnalysis(rows, Indexes, cards, users)
+    print("Análise concluída")
 
     try:
         print("Iniciando login no google sheets")
