@@ -1,6 +1,7 @@
 from extract_csv_data import extractCsvData
 from sheets_api import pushToSheets
 from risk_analysis import riskAnalysis
+from class_to_list import classToList as cla
 
 rows, Indexes, cards, users = extractCsvData("data.csv")
 
@@ -16,7 +17,7 @@ else:
 
     try:
         print("Iniciando login no google sheets")
-        pushToSheets(rows, Indexes.transaction_amount)
+        pushToSheets(rows, Indexes.transaction_amount, cla(suspectUsers))
 
     except Exception as e:
         print("Erro ao realizar operação")

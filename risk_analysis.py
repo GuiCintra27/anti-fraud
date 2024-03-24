@@ -12,7 +12,7 @@ def riskAnalysis(data: list, indexes: Indexes, cards: list[Card], users: list[Us
 
     suspectCards = cardAnalysis(cards, scores)
 
-    suspectUsers.sort(key=lambda x: x.score)
-    suspectCards.sort(key=lambda x: x.score)
+    suspectUsers.sort(key=lambda x: x.score, reverse=True)
+    suspectCards.sort(key=lambda x: x.score, reverse=True)
 
     return suspectUsers, suspectCards
