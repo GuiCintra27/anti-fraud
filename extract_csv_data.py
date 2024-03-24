@@ -73,7 +73,7 @@ def extractCsvData(file: str) -> tuple[list, Indexes, list[Card], list[User]]:
                         cards[card_number] = card
 
                     # Verifica os dados de compra de cada cliente, quantos cartões, dispositivos, pedidos, chargebacks e total gasto no dia
-                    user: User = User([], 0, [], 0, 1)
+                    user: User = User([], 0, [], 0, 1, hour=hour.split('H')[0])
 
                     if user_id in users:
                         currUser = users[user_id]

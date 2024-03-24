@@ -10,10 +10,10 @@ if len(rows) == 0:
 else:
     print(f"Total de transações encontradas: {len(rows)}")
 
-    try:
-        print("Iniciando análise de risco")
-        riskAnalysis(rows, Indexes, cards, users)
+    print("Iniciando análise de risco")
+    suspectUsers, suspectCards = riskAnalysis(rows, Indexes, cards, users)
 
+    try:
         print("Iniciando login no google sheets")
         pushToSheets(rows, Indexes.transaction_amount)
 
