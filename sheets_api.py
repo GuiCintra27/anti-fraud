@@ -18,7 +18,7 @@ collumns = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l",
 
 
 def pushToSheets(data: list, indexes: Indexes, suspectsUsers: list, suspectsUsersDic: dict[int], suspectsCards: list, suspectsCardsDic: dict[int]) -> None:
-    SAMPLE_SPREADSHEET_ID = "16Jc8QNSbyZGZLPcl4qIiG32g1b6XNB1tnHzivA0zNcw"
+    SAMPLE_SPREADSHEET_ID = "1CM6NSg6NEwNbMz39hOothevtAs1B9aM9W5-CfDMAupc"
     # Create the range of tables, based on the keys of each list
     DATA_RANGE = f"Data!A2:{collumns[len(data[0])+1]}"
     USER_ANALYSIS_RANGE = f"Users Analysis!A23:{collumns[len(suspectsUsers[0])-1]}"
