@@ -12,12 +12,14 @@ else:
     print(f"Total de transações encontradas: {len(rows)}")
 
     print("Iniciando análise de risco")
-    suspectUsers, suspectCards = riskAnalysis(rows, Indexes, cards, users)
+    suspectUsers, suspectCards, suspectUsersDic, suspectCardsDic = riskAnalysis(
+        rows, Indexes, cards, users)
     print("Análise concluída")
 
     try:
         print("Iniciando login no google sheets")
-        pushToSheets(rows, Indexes.transaction_amount, cla(suspectUsers))
+        pushToSheets(rows, Indexes,
+                     cla(suspectUsers), suspectUsersDic)
 
     except Exception as e:
         print("Erro ao realizar operação")

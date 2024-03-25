@@ -7,6 +7,7 @@ class Indexes:
     hour: str = None
     transaction_amount: str = None
     device_id: str = None
+    recommendation: str = None
 
 
 class Card:

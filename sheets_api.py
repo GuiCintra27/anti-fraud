@@ -8,7 +8,7 @@ from googleapiclient.errors import HttpError
 
 from login_to_sheets_account import loginToSheets
 
-from models import Suspect
+from models import Indexes, Suspect
 
 # If modifying these scopes, delete the file token.json.
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
@@ -17,11 +17,11 @@ collumns = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l",
 # The ID and range of a sample spreadsheet.
 
 
-def pushToSheets(data: list, currencyPosition: int, suspects: list[Suspect]) -> None:
+def pushToSheets(data: list, indexes: Indexes, suspectsUsers: list[Suspect], suspectsUsersDic: dict[int]) -> None:
     SAMPLE_SPREADSHEET_ID = "16Jc8QNSbyZGZLPcl4qIiG32g1b6XNB1tnHzivA0zNcw"
     # Create the range of tables, based on the keys of each list
     SAMPLE_RANGE_NAME = f"Data!A2:{collumns[len(data[0])+1]}"
-    USER_ANALYSIS_RANGE = f"Users Analysis!A19:{collumns[len(suspects[0])-1]}"
+    USER_ANALYSIS_RANGE = f"Users Analysis!A23:{collumns[len(suspectsUsers[0])-1]}"
     creds = None
     # The file token.json stores the user's access and refresh tokens, and is
     # created automatically when the authorization flow completes for the first
@@ -41,7 +41,23 @@ def pushToSheets(data: list, currencyPosition: int, suspects: list[Suspect]) -> 
 
         for row in data:
             # Spreadsheet only understands it as a number if it has a comma instead of a dot, here I make this change
-            row[currencyPosition] = row[currencyPosition].replace('.', ',')
+            row[indexes.transaction_amount] = row[indexes.transaction_amount].replace(
+                '.', ',')
+
+            userId = row[indexes.user_id]
+            if userId in suspectsUsersDic:
+                user = suspectsUsersDic[userId]
+
+                # Add recommendation to the row
+                if user['score'] < 50:
+                    row.insert(indexes.recommendation, "Approve")
+                elif user['score'] < 75:
+                    row.insert(indexes.recommendation, "Suggestted Rejection")
+                else:
+                    row.insert(indexes.recommendation, "Reject")
+
+            else:
+                row.insert(indexes.recommendation, "Approve")
 
         # Update the spreadsheet Data page with the new values
         result = (
@@ -53,7 +69,7 @@ def pushToSheets(data: list, currencyPosition: int, suspects: list[Suspect]) -> 
         # Update the spreadsheet User Analysis page with the new values
         (
             sheet.values()
-            .update(spreadsheetId=SAMPLE_SPREADSHEET_ID, range=USER_ANALYSIS_RANGE, valueInputOption="USER_ENTERED", body={"values": suspects})
+            .update(spreadsheetId=SAMPLE_SPREADSHEET_ID, range=USER_ANALYSIS_RANGE, valueInputOption="USER_ENTERED", body={"values": suspectsUsers})
             .execute()
         )
 

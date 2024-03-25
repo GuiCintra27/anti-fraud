@@ -1,8 +1,10 @@
 from models import User, Suspect
 
 
-def userAnalysis(users: list[User], scores: dict[str, int], averageTicket: float) -> list[Suspect]:
+def userAnalysis(users: list[User], scores: dict[str, int], averageTicket: float) -> tuple[list[Suspect], dict[int]]:
     suspects: list[Suspect] = []
+    # Create a dictionary to store the score of each suspect and be more easy to access after
+    suspectsDict: dict[int] = {}
 
     for id in users:
         user: User = users[id]
@@ -76,5 +78,6 @@ def userAnalysis(users: list[User], scores: dict[str, int], averageTicket: float
 
         if suspect.score > 30:
             suspects.append(suspect)
+            suspectsDict[suspect.user_id] = {'score': suspect.score}
 
-    return suspects
+    return suspects, suspectsDict

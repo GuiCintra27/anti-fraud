@@ -42,6 +42,7 @@ def extractCsvData(file: str) -> tuple[list, Indexes, list[Card], list[User]]:
                                 Indexes.device_id = counter
                             case "has_cbk":
                                 Indexes.has_cbk = counter
+                                Indexes.recommendation = counter + 1
 
                         counter += 1
 
