@@ -8,7 +8,7 @@ from googleapiclient.errors import HttpError
 
 from login_to_sheets_account import loginToSheets
 
-from models import Indexes, Suspect
+from models import Indexes
 
 # If modifying these scopes, delete the file token.json.
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
@@ -17,11 +17,12 @@ collumns = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l",
 # The ID and range of a sample spreadsheet.
 
 
-def pushToSheets(data: list, indexes: Indexes, suspectsUsers: list[Suspect], suspectsUsersDic: dict[int]) -> None:
+def pushToSheets(data: list, indexes: Indexes, suspectsUsers: list, suspectsUsersDic: dict[int], suspectsCards: list, suspectsCardsDic: dict[int]) -> None:
     SAMPLE_SPREADSHEET_ID = "16Jc8QNSbyZGZLPcl4qIiG32g1b6XNB1tnHzivA0zNcw"
     # Create the range of tables, based on the keys of each list
-    SAMPLE_RANGE_NAME = f"Data!A2:{collumns[len(data[0])+1]}"
+    DATA_RANGE = f"Data!A2:{collumns[len(data[0])+1]}"
     USER_ANALYSIS_RANGE = f"Users Analysis!A23:{collumns[len(suspectsUsers[0])-1]}"
+    CARD_ANALYSIS_RANGE = f"Cards Analysis!A19:{collumns[len(suspectsCards[0])-1]}"
     creds = None
     # The file token.json stores the user's access and refresh tokens, and is
     # created automatically when the authorization flow completes for the first
@@ -45,13 +46,25 @@ def pushToSheets(data: list, indexes: Indexes, suspectsUsers: list[Suspect], sus
                 '.', ',')
 
             userId = row[indexes.user_id]
+            cardNumber = row[indexes.card_number]
+
+            # Add recommendation to the row if the user is suspicious
             if userId in suspectsUsersDic:
                 user = suspectsUsersDic[userId]
 
-                # Add recommendation to the row
                 if user['score'] < 50:
                     row.insert(indexes.recommendation, "Approve")
                 elif user['score'] < 75:
+                    row.insert(indexes.recommendation, "Suggestted Rejection")
+                else:
+                    row.insert(indexes.recommendation, "Reject")
+
+            elif cardNumber in suspectsCardsDic:
+                card = suspectsCardsDic[cardNumber]
+
+                if card['score'] < 50:
+                    row.insert(indexes.recommendation, "Approve")
+                elif card['score'] < 75:
                     row.insert(indexes.recommendation, "Suggestted Rejection")
                 else:
                     row.insert(indexes.recommendation, "Reject")
@@ -62,7 +75,7 @@ def pushToSheets(data: list, indexes: Indexes, suspectsUsers: list[Suspect], sus
         # Update the spreadsheet Data page with the new values
         result = (
             sheet.values()
-            .update(spreadsheetId=SAMPLE_SPREADSHEET_ID, range=SAMPLE_RANGE_NAME, valueInputOption="USER_ENTERED", body={"values": data})
+            .update(spreadsheetId=SAMPLE_SPREADSHEET_ID, range=DATA_RANGE, valueInputOption="USER_ENTERED", body={"values": data})
             .execute()
         )
 
@@ -70,6 +83,13 @@ def pushToSheets(data: list, indexes: Indexes, suspectsUsers: list[Suspect], sus
         (
             sheet.values()
             .update(spreadsheetId=SAMPLE_SPREADSHEET_ID, range=USER_ANALYSIS_RANGE, valueInputOption="USER_ENTERED", body={"values": suspectsUsers})
+            .execute()
+        )
+
+        # Update the spreadsheet Card Analysis page with the new values
+        (
+            sheet.values()
+            .update(spreadsheetId=SAMPLE_SPREADSHEET_ID, range=CARD_ANALYSIS_RANGE, valueInputOption="USER_ENTERED", body={"values": suspectsCards})
             .execute()
         )
 

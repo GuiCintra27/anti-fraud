@@ -32,7 +32,7 @@ def cardAnalysis(cards: list[Card], scores: dict[str, int]) -> tuple[list[Suspec
                 suspect.updateScore(scores['veryHigh'])
 
         if len(card.users_id) > 2:
-            reasons.append('Cards')
+            reasons.append('Users')
 
         if len(card.devices_id) > 2:
             reasons.append('Devices')

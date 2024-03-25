@@ -19,7 +19,7 @@ else:
     try:
         print("Iniciando login no google sheets")
         pushToSheets(rows, Indexes,
-                     cla(suspectUsers), suspectUsersDic)
+                     cla(suspectUsers), suspectUsersDic, cla(suspectCards), suspectCardsDic)
 
     except Exception as e:
         print("Erro ao realizar operação")
