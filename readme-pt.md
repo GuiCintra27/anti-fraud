@@ -29,7 +29,7 @@ Para este projeto, foram utilizados os conhecimentos obtidos nas questões anter
 
 ## <span id="technologies">🛠 Tecnologias</span>
 
-Below are the technologies used in the project: <br/>
+Abaixo seguem as tecnologias utilizadas no projeto: <br/>
 
 <div style="display: inline_block"> 
   <img alt="Google cloud" height="30" src="https://img.shields.io/badge/Google_Cloud-4285F4?style=for-the-badge&logo=google-cloud&logoColor=white">
@@ -39,14 +39,14 @@ Below are the technologies used in the project: <br/>
 
 ## <span id="run">⚙️ Como Rodar</span>
 
-1. Clone this repository
+1. Clone este repositório
 
-2. Run the application with
+2. Rode a aplicação com
 
 ```bash
 python3 main.py
 ```
 
-3. Connect to the registered email (informed in the project delivery email)
+3. Conecte-se ao email cadastrado (informado no email de entrega do projeto)
 
-4. Done! Analyze data from all users in an easy way, in the data spreadsheet. Analyze suspicious user and card activity in their respective spreadsheets
+4. Pronto! Analise os dados de todos os usuários de uma forma fácil, na planilha de dados. Analise atividades suspeitas de usuários e cartões nas suas respectivas planilhas

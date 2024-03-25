@@ -29,7 +29,7 @@ For this project, the knowledge obtained in the previous questions was used to c
 
 ## <span id="technologies">🛠 Technologies</span>
 
-The following tools and frameworks were used in the construction of the project: <br/>
+Below are the technologies used in the project: <br/>
 
 <div style="display: inline_block"> 
   <img alt="Google cloud" height="30" src="https://img.shields.io/badge/Google_Cloud-4285F4?style=for-the-badge&logo=google-cloud&logoColor=white">
@@ -40,42 +40,13 @@ The following tools and frameworks were used in the construction of the project:
 ## <span id="run">⚙️ How to run</span>
 
 1. Clone this repository
-2. Add the HYGRAPH API URL to the environment variables (example in the .env.example file)
-3. Install dependencies
+
+2. Run the application with
 
 ```bash
-npm i
+python3 main.py
 ```
 
-4. Run the application with
+3. Connect to the registered email (informed in the project delivery email)
 
-```bash
-npm run dev
-```
-
-5. You can optionally build the project with
-
-```bash
-npm run build
-```
-
-6. And run the production version
-
-```bash
-npm start
-```
-
-7. Finally, access http://localhost:3000 in your browser to view the application
-
-### 🧪 Tests
-
-To run the tests, execute the command
-
-```bash
-npm test
-```
-
-## <span id="links">🚀 Links</span>
-
-- <a href="https://tech-blog-cintra.vercel.app/" target=”_blank”>Deploy</a>
-- <a href="https://www.figma.com/file/esJ75DiHt6C0JPaV5ufdSJ/Tech-Blog?type=design&mode=design&t=i8306vKEQjkKnRTe-1" target=”_blank”>Figma</a>
+4. Done! Analyze data from all users in an easy way, in the data spreadsheet. Analyze suspicious user and card activity in their respective spreadsheets
