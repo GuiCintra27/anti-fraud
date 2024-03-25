@@ -32,19 +32,6 @@ def userAnalysis(users: list[User], scores: dict[str, int], averageTicket: float
             case n if n > 4:
                 suspect.updateScore(scores['veryHigh'])
 
-        match user.cbk:
-            case 2:
-                suspect.updateScore(scores['veryLow'])
-
-            case 3:
-                suspect.updateScore(scores['medium'])
-
-            case 4:
-                suspect.updateScore(scores['high'])
-
-            case n if n > 4:
-                suspect.updateScore(scores['veryHigh'])
-
         match user.orders:
             case n if n > 3 and n <= 5:
                 suspect.updateScore(scores['low'])
@@ -71,7 +58,8 @@ def userAnalysis(users: list[User], scores: dict[str, int], averageTicket: float
         if len(user.devices_id) > 2:
             reasons.append('Devices')
 
-        if user.cbk > 2 or (user.cbk == 2 and user.orders == 2):
+        if user.cbk > 0:
+            suspect.updateScore(100)
             reasons.append('CBK')
 
         if user.orders > 3:

@@ -20,7 +20,7 @@ collumns = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l",
 def pushToSheets(data: list, currencyPosition: int, suspects: list[Suspect]) -> None:
     SAMPLE_SPREADSHEET_ID = "16Jc8QNSbyZGZLPcl4qIiG32g1b6XNB1tnHzivA0zNcw"
     # Create the range of tables, based on the keys of each list
-    SAMPLE_RANGE_NAME = f"Data!A2:{collumns[len(data[0])]}"
+    SAMPLE_RANGE_NAME = f"Data!A2:{collumns[len(data[0])+1]}"
     USER_ANALYSIS_RANGE = f"Users Analysis!A19:{collumns[len(suspects[0])-1]}"
     creds = None
     # The file token.json stores the user's access and refresh tokens, and is

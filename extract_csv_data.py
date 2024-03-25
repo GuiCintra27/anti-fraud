@@ -3,23 +3,23 @@ from models import Indexes, Card, User
 
 
 def extractCsvData(file: str) -> tuple[list, Indexes, list[Card], list[User]]:
-    # Dados das linhas da tabela
+    # Table row data
     rows = []
-    # Abaixo estou criando como dicionário para facilitar a busca e diminuir a complexidade de tempo
-    # Lista de cartões e os dados aos quais estão vinculados
+    # Below I am creating it as a dictionary to facilitate the search and reduce time complexity
+    # List of cards and the data they are linked to
     cards = {}
-    # Lista de usuários e os dados aos quais estão vinculados
+    # List of users and the data they are linked to
     users = {}
-    # Total de vendas
+    # Sales amount
     totalAmount = 0
 
     with open(file) as f:
         for line in f:
-            line = line.strip()  # Remove espaços em branco
+            line = line.strip()  # Remove whitespace
             if line:
-                columns = line.split(',')  # Divide a linha em colunas
+                columns = line.split(',')  # Divide the row into columns
 
-                # Adiciona as posições das colunas à variável Indexes
+                # Adds column positions to the Indexes variable
                 if Indexes.user_id is None:
                     counter = 0
                     for column in columns:
@@ -46,13 +46,13 @@ def extractCsvData(file: str) -> tuple[list, Indexes, list[Card], list[User]]:
                         counter += 1
 
                 else:
-                    # Não trabalhar com valores da tabela antes desta linha, pois as posições só se acertam após adicionar o horário nas colunas
-                    # Converter data para hora e acrescentar na lista
+                    # Do not work with table values before this line, as the positions are only adjusted after adding the time in the columns
+                    # Convert date to time and add to list
                     hour = f"{datetime.fromisoformat(columns[Indexes.transaction_date]).hour}H"
                     columns.insert(Indexes.hour, hour)
                     rows.append(columns)
 
-                    # Soma a venda ao valor total de vendas
+                    # Add the sale to the total sales value
                     totalAmount += float(columns[Indexes.transaction_amount])
 
                     user_id = columns[Indexes.user_id]
@@ -61,7 +61,7 @@ def extractCsvData(file: str) -> tuple[list, Indexes, list[Card], list[User]]:
                     card_number = columns[Indexes.card_number]
                     cbk = columns[Indexes.has_cbk]
 
-                    # Verifica os dados dos cartões, quantos usuários e dispositivos relacionados
+                    # Check card data, how many users and related devices
                     card = Card([], [])
 
                     if card_number in cards:
@@ -72,7 +72,7 @@ def extractCsvData(file: str) -> tuple[list, Indexes, list[Card], list[User]]:
                         card.insert(user_id, device_id)
                         cards[card_number] = card
 
-                    # Verifica os dados de compra de cada cliente, quantos cartões, dispositivos, pedidos, chargebacks e total gasto no dia
+                    # Checks each customer's purchase data, how many cards, devices, orders, chargebacks and total spent on the day
                     user: User = User([], 0, [], 0, 1, hour=hour.split('H')[0])
 
                     if user_id in users:
@@ -83,7 +83,7 @@ def extractCsvData(file: str) -> tuple[list, Indexes, list[Card], list[User]]:
                         user.insert(card_number, amount, device_id, cbk)
                         users[user_id] = user
 
-    # Ticket médio
+    # Calculate the average ticket
     averageTicket = "%.2f" % round((totalAmount / len(users)), 2)
     rows[0] = rows[0] + [averageTicket]
 
