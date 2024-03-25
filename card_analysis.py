@@ -13,29 +13,16 @@ def cardAnalysis(cards: list[Card], scores: dict[str, int]) -> tuple[list[Suspec
 
         match len(card.users_id):
             case 3:
-                suspect.updateScore(scores['medium'])
+                suspect.updateScore(scores['medium'] + 20)
 
             case 4:
-                suspect.updateScore(scores['high'])
+                suspect.updateScore(scores['high'] + 20)
 
             case n if n > 4:
-                suspect.updateScore(scores['veryHigh'])
-
-        match len(card.devices_id):
-            case 3:
-                suspect.updateScore(scores['medium'])
-
-            case 4:
-                suspect.updateScore(scores['high'])
-
-            case n if n > 4:
-                suspect.updateScore(scores['veryHigh'])
+                suspect.updateScore(scores['veryHigh'] + 25)
 
         if len(card.users_id) > 2:
             reasons.append('Users')
-
-        if len(card.devices_id) > 2:
-            reasons.append('Devices')
 
         suspect.reasons = reasons
         if suspect.score > 30:

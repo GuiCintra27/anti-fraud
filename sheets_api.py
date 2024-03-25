@@ -22,7 +22,7 @@ def pushToSheets(data: list, indexes: Indexes, suspectsUsers: list, suspectsUser
     # Create the range of tables, based on the keys of each list
     DATA_RANGE = f"Data!A2:{collumns[len(data[0])+1]}"
     USER_ANALYSIS_RANGE = f"Users Analysis!A23:{collumns[len(suspectsUsers[0])-1]}"
-    CARD_ANALYSIS_RANGE = f"Cards Analysis!A19:{collumns[len(suspectsCards[0])-1]}"
+    CARD_ANALYSIS_RANGE = f"Cards Analysis!A18:{collumns[len(suspectsCards[0])-1]}"
     creds = None
     # The file token.json stores the user's access and refresh tokens, and is
     # created automatically when the authorization flow completes for the first
@@ -49,28 +49,34 @@ def pushToSheets(data: list, indexes: Indexes, suspectsUsers: list, suspectsUser
             cardNumber = row[indexes.card_number]
 
             # Add recommendation to the row if the user is suspicious
-            if userId in suspectsUsersDic:
-                user = suspectsUsersDic[userId]
-
-                if user['score'] < 50:
-                    row.insert(indexes.recommendation, "Approve")
-                elif user['score'] < 75:
-                    row.insert(indexes.recommendation, "Suggestted Rejection")
-                else:
-                    row.insert(indexes.recommendation, "Reject")
-
-            elif cardNumber in suspectsCardsDic:
-                card = suspectsCardsDic[cardNumber]
-
-                if card['score'] < 50:
-                    row.insert(indexes.recommendation, "Approve")
-                elif card['score'] < 75:
-                    row.insert(indexes.recommendation, "Suggestted Rejection")
-                else:
-                    row.insert(indexes.recommendation, "Reject")
+            if userId not in suspectsUsersDic and cardNumber not in suspectsCardsDic:
+                row.insert(indexes.recommendation, "Approve")
 
             else:
-                row.insert(indexes.recommendation, "Approve")
+                recommendationAdded = False
+                if userId in suspectsUsersDic:
+                    user = suspectsUsersDic[userId]
+                    recommendationAdded = True
+
+                    if user['score'] < 50:
+                        row.insert(indexes.recommendation, "Approve")
+                    elif user['score'] < 75:
+                        row.insert(indexes.recommendation,
+                                   "Suggestted Rejection")
+                    else:
+                        row.insert(indexes.recommendation, "Reject")
+
+                if cardNumber in suspectsCardsDic:
+                    card = suspectsCardsDic[cardNumber]
+
+                    if recommendationAdded:
+                        row[indexes.recommendation] = "Reject"
+                    else:
+                        if card['score'] < 75:
+                            row.insert(indexes.recommendation,
+                                       "Suggestted Rejection")
+                        else:
+                            row.insert(indexes.recommendation, "Reject")
 
         # Update the spreadsheet Data page with the new values
         result = (
