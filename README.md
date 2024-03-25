@@ -43,7 +43,7 @@ Below are the technologies used in the project: <br/>
 
 1. Clone this repository (make sure you have python installed on your machine)
 
-2. Install the project libraries ([library documentation](https://developers.google.com/sheets/api/quickstart/python))
+2. Install the project libraries ([library documentation](https://developers.google.com/sheets/api/quickstart/python)), they are available in the requirements.txt file
 
 ```bash
 pip install --upgrade google-api-python-client google-auth-httplib2 google-auth-oauthlib
