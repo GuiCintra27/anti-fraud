@@ -27,6 +27,8 @@ The data obtained is being considered as an analysis of a previous day, for exam
 
 For this project, the knowledge obtained in the previous questions was used to create a score-based anti-fraud tool.
 
+The results are located [in this spreadsheet](https://docs.google.com/spreadsheets/d/1CM6NSg6NEwNbMz39hOothevtAs1B9aM9W5-CfDMAupc/edit?usp=sharing).
+
 ## <span id="technologies">🛠 Technologies</span>
 
 Below are the technologies used in the project: <br/>
@@ -39,14 +41,20 @@ Below are the technologies used in the project: <br/>
 
 ## <span id="run">⚙️ How to run</span>
 
-1. Clone this repository
+1. Clone this repository (make sure you have python installed on your machine)
 
-2. Run the application with
+2. Install the project libraries ([library documentation](https://developers.google.com/sheets/api/quickstart/python))
+
+```bash
+pip install --upgrade google-api-python-client google-auth-httplib2 google-auth-oauthlib
+```
+
+3. Run the application with
 
 ```bash
 python3 main.py
 ```
 
-3. Connect to the registered email (informed in the project delivery email)
+4. Connect to the registered email (informed in the project delivery email)
 
-4. Done! Analyze data from all users in an easy way, in the data spreadsheet. Analyze suspicious user and card activity in their respective spreadsheets
+5. Done! Analyze data from all users in an easy way, in the data spreadsheet. Analyze suspicious user and card activity in their respective spreadsheets

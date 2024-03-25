@@ -27,6 +27,8 @@ Os dados obtidos estão sendo considerados como uma análise de um dia anterior,
 
 Para este projeto, foram utilizados os conhecimentos obtidos nas questões anteriores, para criar um antifraude baseado em score.
 
+Os resultados estão localizados [nesta planilha](https://docs.google.com/spreadsheets/d/1CM6NSg6NEwNbMz39hOothevtAs1B9aM9W5-CfDMAupc/edit?usp=sharing).
+
 ## <span id="technologies">🛠 Tecnologias</span>
 
 Abaixo seguem as tecnologias utilizadas no projeto: <br/>
@@ -39,14 +41,20 @@ Abaixo seguem as tecnologias utilizadas no projeto: <br/>
 
 ## <span id="run">⚙️ Como Rodar</span>
 
-1. Clone este repositório
+1. Clone este repositório (se certifique de ter o python instalado na sua máquina)
 
-2. Rode a aplicação com
+2. Instale as bibliotecas do projeto ([documentação da biblioteca](https://developers.google.com/sheets/api/quickstart/python))
+
+```bash
+pip install --upgrade google-api-python-client google-auth-httplib2 google-auth-oauthlib
+```
+
+3. Rode a aplicação com
 
 ```bash
 python3 main.py
 ```
 
-3. Conecte-se ao email cadastrado (informado no email de entrega do projeto)
+4. Conecte-se ao email cadastrado (informado no email de entrega do projeto)
 
-4. Pronto! Analise os dados de todos os usuários de uma forma fácil, na planilha de dados. Analise atividades suspeitas de usuários e cartões nas suas respectivas planilhas
+5. Pronto! Analise os dados de todos os usuários de uma forma fácil, na planilha de dados. Analise atividades suspeitas de usuários e cartões nas suas respectivas planilhas
