@@ -63,7 +63,7 @@ def extractCsvData(file: str) -> tuple[list, Indexes, list[Card], list[User]]:
                     totalAmount += float(amount)
 
                     # Check card data, how many users and related devices
-                    card: Card = Card([], [])
+                    card: Card = Card(users_id=[], devices_id=[])
 
                     if card_number in cards:
                         currCard = cards[card_number]
@@ -74,11 +74,13 @@ def extractCsvData(file: str) -> tuple[list, Indexes, list[Card], list[User]]:
                         cards[card_number] = card
 
                     # Checks each customer's purchase data, how many cards, devices, orders, chargebacks and total spent on the day
-                    user: User = User([], 0, [], 0, 1, hour=hour.split('H')[0])
+                    user: User = User(cards_number=[], amount=0,
+                                      devices_id=[], cbk=0, orders=1, hour=int(hour.split('H')[0]))
 
                     if user_id in users:
                         currUser = users[user_id]
-                        currUser.update(card_number, amount, device_id, cbk)
+                        currUser.update(card_number, amount,
+                                        device_id, cbk, int(hour.split('H')[0]))
 
                     else:
                         user.insert(card_number, amount, device_id, cbk)
@@ -87,5 +89,7 @@ def extractCsvData(file: str) -> tuple[list, Indexes, list[Card], list[User]]:
     # Calculate the average ticket
     averageTicket = "%.2f" % round((totalAmount / len(users)), 2)
     rows[0] = rows[0] + [averageTicket]
+    # Update the index of the average ticket column
+    Indexes.average_ticket = len(rows[0]) - 1
 
     return rows, Indexes, cards, users

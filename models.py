@@ -8,6 +8,7 @@ class Indexes:
     transaction_amount: str = None
     device_id: str = None
     recommendation: str = None
+    average_ticket: str = None
 
 
 class Card:
@@ -57,7 +58,7 @@ class User:
         if cbk == 'TRUE':
             self.cbk += 1
 
-        if int(hour) < self.hour:
+        if hour < self.hour:
             self.hour = int(hour)
 
 
