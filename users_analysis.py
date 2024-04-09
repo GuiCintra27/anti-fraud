@@ -71,6 +71,7 @@ def userAnalysis(users: list[User], scores: dict[str, int], averageTicket: float
             reasons.append('Amount')
 
         suspect.reasons = reasons
+
         if suspect.score > 0:
             if int(user.hour) < 6:
                 suspect.updateScore(scores['low'])

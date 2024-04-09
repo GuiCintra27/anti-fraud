@@ -20,7 +20,7 @@ collumns = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l",
 def pushToSheets(data: list, indexes: Indexes, suspectsUsers: list, suspectsUsersDic: dict[int], suspectsCards: list, suspectsCardsDic: dict[int]) -> None:
     SAMPLE_SPREADSHEET_ID = "1CM6NSg6NEwNbMz39hOothevtAs1B9aM9W5-CfDMAupc"
     # Create the range of tables, based on the keys of each list
-    DATA_RANGE = f"Data!A2:{collumns[len(data[0])+1]}"
+    DATA_RANGE = f"Data!A2:{collumns[len(data[0])]}"
     USER_ANALYSIS_RANGE = f"Users Analysis!A23:{collumns[len(suspectsUsers[0])-1]}"
     CARD_ANALYSIS_RANGE = f"Cards Analysis!A18:{collumns[len(suspectsCards[0])-1]}"
     creds = None
@@ -53,10 +53,11 @@ def pushToSheets(data: list, indexes: Indexes, suspectsUsers: list, suspectsUser
                 row.insert(indexes.recommendation, "Approve")
 
             else:
-                recommendationAdded = False
+                recommendationAlreadyAdded = False
+
                 if userId in suspectsUsersDic:
                     user = suspectsUsersDic[userId]
-                    recommendationAdded = True
+                    recommendationAlreadyAdded = True
 
                     if user['score'] < 50:
                         row.insert(indexes.recommendation, "Approve")
@@ -69,7 +70,7 @@ def pushToSheets(data: list, indexes: Indexes, suspectsUsers: list, suspectsUser
                 if cardNumber in suspectsCardsDic:
                     card = suspectsCardsDic[cardNumber]
 
-                    if recommendationAdded:
+                    if recommendationAlreadyAdded:
                         row[indexes.recommendation] = "Reject"
                     else:
                         if card['score'] < 75:

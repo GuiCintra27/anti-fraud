@@ -16,19 +16,19 @@ else:
         rows, Indexes, cards, users)
     print("Análise concluída")
 
-    # retry = 0
-    # try:
-    #     print("Iniciando login no google sheets")
-    #     pushToSheets(rows, Indexes,
-    #                  cla(suspectUsers), suspectUsersDic, cla(suspectCards), suspectCardsDic)
+    retry = 0
+    try:
+        print("Iniciando login no google sheets")
+        pushToSheets(rows, Indexes,
+                     cla(suspectUsers), suspectUsersDic, cla(suspectCards), suspectCardsDic)
 
-    # except Exception as e:
-    #     if retry < 3:
-    #         retry += 1
-    #         print(
-    #             f"Erro ao realizar operação. Tentativa {retry} de 3")
-    #         pushToSheets(rows, Indexes,
-    #                      cla(suspectUsers), suspectUsersDic, cla(suspectCards), suspectCardsDic)
-    #     else:
-    #         print("Erro ao realizar operação")
-    #         print(e)
+    except Exception as e:
+        if retry < 3:
+            retry += 1
+            print(
+                f"Erro ao realizar operação. Tentativa {retry} de 3")
+            pushToSheets(rows, Indexes,
+                         cla(suspectUsers), suspectUsersDic, cla(suspectCards), suspectCardsDic)
+        else:
+            print("Erro ao realizar operação")
+            print(e)
