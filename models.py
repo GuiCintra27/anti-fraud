@@ -44,7 +44,7 @@ class User:
         if cbk == 'TRUE':
             self.cbk = 1
 
-    def update(self, card_number: str, amount: float, device_id: str, cbk: bool):
+    def update(self, card_number: str, amount: float, device_id: str, cbk: bool, hour: str):
         self.amount = self.amount + float(amount)
         self.orders = self.orders + 1
 
@@ -56,6 +56,9 @@ class User:
 
         if cbk == 'TRUE':
             self.cbk += 1
+
+        if int(hour) < self.hour:
+            self.hour = int(hour)
 
 
 class Suspect:

@@ -4,14 +4,14 @@ from models import Indexes, Card, User
 
 def extractCsvData(file: str) -> tuple[list, Indexes, list[Card], list[User]]:
     # Table row data
-    rows = []
+    rows: list = []
     # Below I am creating it as a dictionary to facilitate the search and reduce time complexity
     # List of cards and the data they are linked to
-    cards = {}
+    cards: list[Card] = {}
     # List of users and the data they are linked to
-    users = {}
+    users: list[User] = {}
     # Sales amount
-    totalAmount = 0
+    totalAmount: float = 0
 
     with open(file) as f:
         for line in f:
@@ -53,17 +53,17 @@ def extractCsvData(file: str) -> tuple[list, Indexes, list[Card], list[User]]:
                     columns.insert(Indexes.hour, hour)
                     rows.append(columns)
 
-                    # Add the sale to the total sales value
-                    totalAmount += float(columns[Indexes.transaction_amount])
-
                     user_id = columns[Indexes.user_id]
                     amount = columns[Indexes.transaction_amount]
                     device_id = columns[Indexes.device_id]
                     card_number = columns[Indexes.card_number]
                     cbk = columns[Indexes.has_cbk]
 
+                    # Add the sale to the total sales value
+                    totalAmount += float(amount)
+
                     # Check card data, how many users and related devices
-                    card = Card([], [])
+                    card: Card = Card([], [])
 
                     if card_number in cards:
                         currCard = cards[card_number]
